@@ -9,6 +9,7 @@ Ingest data from the feed into a database of your choice (allow for ingestion of
 Create TWO endpoints:
 * An endpoint that accepts parameters for year/season and/or team alias then returns corresponding teams and bye weeks. A bye week for the NFL is a week that team does NOT play.
 * An endpoint should take a team alias as a parameter and return the average number of points AFTER the bye week (optionally by period, so include a period parameter as well).
+  * Per Justin 5/10: We were hoping for just average number of points for a single season. We can discuss more and complexities associated to that, but not really in scope
 
 Treat this project as if you were submitting a pull-request for approval to go to production (e.g. project organizations, code quality, etc). It’d be great to see some tests too.
 
@@ -38,17 +39,13 @@ In order to run the correct version of node and manage packages, you must instal
 
 `brew install mongodb`
 
-### Clone Repo
-
-@todo fill this out!
-
 ### Install javascript packages
 
 While in the directory, run `yarn install` to download all packages
 
 ### Ingest data
 
-@todo tell them how to ingest the data
+Do the steps to get the project running locally, and then run `yarn ingest` in order to fill the database with game data
 
 ## Running the project locally
 

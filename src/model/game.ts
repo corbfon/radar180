@@ -7,7 +7,7 @@ import { iTeam } from './team'
 import { RawGameData } from './../services/nfl'
 
 const schema = {
-  gameId: Number,
+  gameId: { type: Number, index: true },
   gameDate: Date,
   gameKey: Number,
   gameTimeEastern: String, // overlap with isoTime
@@ -27,11 +27,11 @@ const schema = {
     divisionAbbr: String,
   },
   homeTeamAbbr: String,
-  homeTeamId: String,
+  homeTeamId: { type: String, index: true },
   isoTime: Date,
   networkChannel: String,
   ngsGame: Boolean,
-  season: Number,
+  season: { type: Number, index: true },
   seasonType: String,
   site: {
     siteId: Number,
@@ -54,7 +54,7 @@ const schema = {
     divisionAbbr: String,
   },
   visitorTeamAbbr: String,
-  visitorTeamId: String,
+  visitorTeamId: { type: String, index: true },
   week: Number,
   weekName: String,
   weekNameAbbr: String,
@@ -85,11 +85,6 @@ const schema = {
 }
 
 export const Game: Model<GameModel> = <Model<GameModel>>createModel('game', schema)
-
-export const gameFromRawGame = (game: RawGameData) =>
-  Game.findOneAndUpdate({ gameId: game.gameId }, game, { new: true, upsert: true }).exec()
-
-export const retrieveByeWeeks = Game.find({ seasonType: 'REG' }).exec()
 
 interface iGame {
   gameId: number

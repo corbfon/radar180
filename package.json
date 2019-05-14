@@ -9,7 +9,8 @@
     "test": "mocha -r ts-node/register 'src/**/*spec.*' --exit",
     "test:u": "mocha -r ts-node/register 'src/**/*.spec.*' --exit",
     "test:i": "mocha -r ts-node/register 'src/**/*.ispec.*' --exit",
-    "db": "mongod --config mongod.conf"
+    "db": "mongod --config mongod.conf",
+    "ingest": "serverless invoke local -f ingest-games"
   },
   "dependencies": {
     "@types/lodash": "^4.14.126",
