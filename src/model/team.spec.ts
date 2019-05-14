@@ -110,6 +110,7 @@ describe('Team model', () => {
           },
         },
         { $project: { awayGames: 0, homeGames: 0 } },
+        { $match: { 'games.0': { $exists: true } } },
       ])
     })
     it('should query for a single team', async () => {
@@ -145,6 +146,7 @@ describe('Team model', () => {
           },
         },
         { $project: { awayGames: 0, homeGames: 0 } },
+        { $match: { 'games.0': { $exists: true } } },
       ])
     })
   })

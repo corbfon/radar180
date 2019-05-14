@@ -53,7 +53,14 @@ export const Team: TeamModel = <TeamModel>createModel('Team', rawSchema, (schema
           },
         },
         {
+          // get rid of fields intended only in aggregation
           $project: { homeGames: 0, awayGames: 0 },
+        },
+        {
+          // filter out teams without games this season
+          $match: {
+            'games.0': { $exists: true },
+          },
         },
       ])
     }

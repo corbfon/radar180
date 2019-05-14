@@ -16,7 +16,7 @@ describe('teams integration', () => {
       expect(res.status).to.be.equal(200)
       expect(res.data).to.haveOwnProperty('data')
       expect(res.data.data).to.be.instanceOf(Array)
-      expect(res.data.data).to.be.lengthOf(34)
+      expect(res.data.data).to.be.lengthOf(32) // known number of teams with games this season
       res.data.data.forEach(team => {
         expect(team).to.haveOwnProperty('_id')
         expect(team).to.haveOwnProperty('teamId')
@@ -27,6 +27,7 @@ describe('teams integration', () => {
         expect(team).to.haveOwnProperty('teamType')
         expect(team).to.haveOwnProperty('conferenceAbbr')
         expect(team).to.haveOwnProperty('games')
+        expect(team.games.length).to.be.above(0)
         team.games.forEach(game => {
           expect(game).to.haveOwnProperty('gameId')
           expect(game).to.haveOwnProperty('week')
