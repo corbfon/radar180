@@ -1,0 +1,16 @@
+# package directories
+node_modules
+jspm_packages
+yarn-error.log
+
+# Serverless directories
+.serverless
+
+# build artifacts
+.build
+
+# database
+data/*
+!data/.gitkeep
+!data/db/.gitkeep
+!data/temp/.gitkeep
