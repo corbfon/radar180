@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "serverless offline start --port 4200 --useSeparateProcesses",
+    "start": "yarn db && serverless offline start --port 4200 --useSeparateProcesses",
     "deploy": "serverless deploy -v",
     "deploy:prod": "serverless deploy -v -s prod",
     "test": "mocha -r ts-node/register 'src/**/*spec.*' --exit",
     "test:u": "mocha -r ts-node/register 'src/**/*.spec.*' --exit",
     "test:i": "mocha -r ts-node/register 'src/**/*.ispec.*' --exit",
-    "db": "mongod --config mongod.conf",
+    "db": "scripts/start_db.sh",
+    "db:kill": "pgrep mongod | xargs kill",
     "ingest": "serverless invoke local -f ingest-games"
   },
   "dependencies": {
