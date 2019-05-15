@@ -11,6 +11,7 @@
     "test:i": "mocha -r ts-node/register 'src/**/*.ispec.*' --exit",
     "db": "scripts/start_db.sh",
     "db:kill": "pgrep mongod | xargs kill",
+    "db:empty": "mongo radar180 --eval 'db.dropDatabase()'",
     "ingest": "serverless invoke local -f ingest-games"
   },
   "dependencies": {

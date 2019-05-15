@@ -49,22 +49,15 @@ Do the steps to get the project running locally, and then run `yarn ingest` in o
 
 ## Running the project locally
 
-* Start the database using `yarn db`
-  * This can be closed down later using `ps aux | grep mongod` followed by `kill <pid>` where `pid` is the process id of the mongo instance you'd like to stop
-  * DO NOT use the `-9` flag on the `kill` command. See [mongodb docs](https://docs.mongodb.com/manual/tutorial/manage-mongodb-processes/) for reasons, and for other clean kill strategies
-* `yarn start` will serve the project, allowing API's to be accessed via `localhost:4200`
-* Individual lambdas may be invoked using `serverless invoke -f <function name>` where `<function name>` is the name of the function described by the `serverless.yml` - [docs here](https://serverless.com/framework/docs/providers/google/cli-reference/invoke-local/)
+* `yarn start` will start the database and serve the project, allowing API's to be accessed via `localhost:4200`
+  * To stop the database, run `yarn db:kill`
+  * `yarn db` will run the database by itself
+* You may start over from the beginning by emptying the database with `yarn db:empty`
 
 ## To do
-- Best Practices
-  - Ensure that game id and team abbreviations are indexed
 - Ingestion
   - Add tests?
-  - Make the single ingestion run multiple seasons
-- Bye weeks
-  - Take season into consideration on bye weeks endpoint
-  - Write e2e tests
-- Avs scores
+- Avg scores
   - Make endpoint
   - Write tests
 
