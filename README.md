@@ -57,9 +57,12 @@ Do the steps to get the project running locally, and then run `yarn ingest` in o
 ## To do
 - Ingestion
   - Add tests?
+- Bye weeks
+  - add api docs
 - Avg scores
   - Make endpoint
   - Write tests
+  - Add api docs in serverless
 
 ## Strats
 - 2

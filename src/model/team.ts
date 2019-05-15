@@ -3,8 +3,9 @@ import { Document, Model, Schema } from 'mongoose'
 
 // project imports
 import createModel from './create-model'
-import { RawGameData } from '../services/nfl'
+import { getScoreByTeam } from './game'
 import { iHttpRequestMiddleware } from '../utils/handle-http'
+import { sumObjectsByKey, divideObjectByConstant } from './../utils/operators'
 
 const rawSchema = {
   teamId: { type: String, index: true },
@@ -50,6 +51,7 @@ export const Team: TeamModel = <TeamModel>createModel('Team', rawSchema, (schema
                 },
               },
             },
+            season,
           },
         },
         {
@@ -60,50 +62,6 @@ export const Team: TeamModel = <TeamModel>createModel('Team', rawSchema, (schema
           // filter out teams without games this season
           $match: {
             'games.0': { $exists: true },
-          },
-        },
-      ])
-    }
-  })
-  schema.static('withScores', function() {
-    return ({ season, team }) => {
-      let $match = team ? { abbr: team } : {}
-      return this.aggregate([
-        { $match },
-        {
-          $lookup: {
-            from: 'games',
-            localField: 'teamId',
-            foreignField: 'homeTeamId',
-            as: 'homeGames',
-          },
-        },
-        {
-          $lookup: {
-            from: 'games',
-            localField: 'teamId',
-            foreignField: 'visitorTeamId',
-            as: 'awayGames',
-          },
-        },
-        {
-          $addFields: {
-            games: {
-              $filter: {
-                input: { $concatArrays: ['$homeGames', '$awayGames'] },
-                as: 'game',
-                cond: {
-                  $and: [{ $eq: ['$$game.season', season] }, { $eq: ['$$game.seasonType', 'REG'] }],
-                },
-              },
-            },
-          },
-        },
-        {
-          $project: {
-            homeGames: 0,
-            awayGames: 0,
-            seasonAvg: { $avg: '$' },
           },
         },
       ])
@@ -127,6 +85,17 @@ export const addByeWeeks = (): iHttpRequestMiddleware => {
         }
       }
     }
+  }
+}
+
+export const addGamesAvg = (): iHttpRequestMiddleware => {
+  return context => {
+    context.data.forEach(team => {
+      if (team.games && team.games.length > 0) {
+        team.seasonScores = sumObjectsByKey(...team.games.map(game => getScoreByTeam(game, team.abbr)))
+        team.scoresAvg = divideObjectByConstant(team.seasonScores, team.games.length, 1)
+      }
+    })
   }
 }
 

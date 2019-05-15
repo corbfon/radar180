@@ -4,7 +4,6 @@ import { Model, Document } from 'mongoose'
 // project imports
 import createModel from './create-model'
 import { iTeam } from './team'
-import { RawGameData } from './../services/nfl'
 
 const schema = {
   gameId: { type: Number, index: true },
@@ -86,10 +85,38 @@ const schema = {
 
 export const Game: Model<GameModel> = <Model<GameModel>>createModel('game', schema)
 
+/**
+ * Returns the scores, optionally by period, for the given team abbreviation. Note that it relies on the team abbreviation existing on the game.
+ * @param game game data
+ * @param teamAbbr abbreviation for team
+ */
+export const getScoreByTeam = (game: iGame, teamAbbr: string): iTeamScore | undefined => {
+  if (!game.score) return
+  /** @todo decide how to handle the 2013 season, which does not have scores */
+  const teamScoreField = game.homeTeamAbbr === teamAbbr ? 'homeTeamScore' : 'visitorTeamScore'
+  return game.score[teamScoreField]
+}
+
 interface iGame {
   gameId: number
   homeTeam: iTeam
+  homeTeamAbbr: string
   visitorTeam: iTeam
+  visitorTeamAbbr: string
+  score?: {
+    homeTeamScore: iTeamScore
+    visitorTeamScore: iTeamScore
+  }
+}
+
+interface iTeamScore {
+  pointTotal?: number
+  pointQ1?: number
+  pointQ2?: number
+  pointQ3?: number
+  pointQ4?: number
+  pointOT?: number
+  timeoutsRemaining?: number
 }
 
 export interface GameModel extends iGame, Document {}
