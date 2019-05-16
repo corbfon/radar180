@@ -17,6 +17,26 @@ You can send back a zip file, or post a github repo with code, up to you.
 
 Make sure we can run the project once received.
 
+## Solution
+
+After running the project locally, you may test the solutions to the problem by querying the http://localhost:4200/teams endpoint
+
+
+* Solution 1:
+  * [All teams for a season, with bye weeks](http://localhost:4200/teams?season=2016&returnFields=byeWeek,teamId,abbr,fullName,nick)
+  * [Single team for a season, with bye week](http://localhost:4200/teams?season=2017&team=DAL&returnFields=byeWeek,teamId,abbr,fullName,nick)
+* Solution 2:
+  * [Average points for a team](http://localhost:4200/teams?season=2016&team=DAL&returnFields=teamId,abbr,fullName,nick,seasonScoresAvg.pointTotal)
+  * [Average points, by period, for a single team](http://localhost:4200/teams?season=2016&team=DAL&returnFields=teamId,abbr,fullName,nick,seasonScoresAvg)
+
+### Additional Examples
+
+[All teams in a season, full response](http://localhost:4200/teams?season=2018)
+[One team in a season](http://localhost:4200/teams?season=2018&team=DAL)
+[One team, including bye week](http://localhost:4200/teams?season=2018&team=DAL&returnFields=byeWeek,teamId,abbr,games,cityState,fullName,nick) - this one excludes some fields
+[All teams in a season with average points after bye week](http://localhost:4200/teams?season=2018&returnFields=byeWeek,teamId,abbr,fullName,nick,seasonScoresAvg&seasonScoresStart=byeWeek)
+[A single team in a season with average points per quarter, plus OT, after bye week](http://localhost:4200/teams?season=2018&returnFields=byeWeek,teamId,abbr,fullName,nick,seasonScoresAvg.pointQ1,seasonScoresAvg.pointQ2,seasonScoresAvg.pointQ3,seasonScoresAvg.pointQ4,seasonScoresAvg.pointOT&seasonScoresStart=byeWeek)
+
 ## Background
 
 * Each team in the NFL has one bye week per season
@@ -58,15 +78,6 @@ Do the steps to get the project running locally, and then run `yarn ingest` in o
 
 Run `yarn start` and then `yarn test` in order to run both unit and integration tests. Unit and integration may be run separately by `yarn test:u` and `yarn test:i`, respectively.
 
-## Problem answer
-
-After running the project locally, the "answers" to both of the problem statements are behind a single endpoint, controlled with query parameters. Try these queries:
-
-[All teams in a season](http://localhost:4200/teams?season=2018)
-[One team in a season](http://localhost:4200/teams?season=2018&team=DAL)
-[One team, including bye week](http://localhost:4200/teams?season=2018&team=DAL&returnFields=byeWeek,teamId,abbr,games,cityState,fullName,nick) - this one excludes some fields
-[All teams in a season with average points after bye week](http://localhost:4200/teams?season=2018&returnFields=byeWeek,teamId,abbr,fullName,nick,seasonScoresAvg&seasonScoresStart=byeWeek)
-[A single team in a season with average points per quarter, plus OT, after bye week](http://localhost:4200/teams?season=2018&returnFields=byeWeek,teamId,abbr,fullName,nick,seasonScoresAvg.pointQ1,seasonScoresAvg.pointQ2,seasonScoresAvg.pointQ3,seasonScoresAvg.pointQ4,seasonScoresAvg.pointOT&seasonScoresStart=byeWeek)
 
 ## Ideas for improvements
 
