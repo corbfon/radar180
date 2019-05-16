@@ -48,6 +48,7 @@ describe('Team model', () => {
   })
   describe('addGamesAvg', () => {
     let scoresByTeamStub: SinonStub
+    let data: any
     beforeEach(() => {
       scoresByTeamStub = stub(game, 'getScoreByTeam').returns({
         pointTotal: 354,
@@ -58,17 +59,17 @@ describe('Team model', () => {
         pointOT: 0,
         timeoutsRemaining: 20,
       })
-    })
-    afterEach(() => {
-      scoresByTeamStub.restore()
-    })
-    it('should add seasonScores and seasonScoresAvg to the team', () => {
-      const data: any = [
+      data = [
         {
           abbr: 'DAL',
           games: [{}, {}],
         },
       ]
+    })
+    afterEach(() => {
+      scoresByTeamStub.restore()
+    })
+    it('should add seasonScores and seasonScoresAvg to the team', () => {
       addGamesAvg(data)
       expect(data).to.deep.equal([
         {
@@ -82,6 +83,33 @@ describe('Team model', () => {
             pointQ4: 240,
             pointTotal: 708,
             timeoutsRemaining: 40,
+          },
+          seasonScoresAvg: {
+            pointOT: 0,
+            pointQ1: 60,
+            pointQ2: 128,
+            pointQ3: 46,
+            pointQ4: 120,
+            pointTotal: 354,
+            timeoutsRemaining: 20,
+          },
+        },
+      ])
+    })
+    it('should add seasonScores and seasonScoresAvg for all weeks after the given start week', () => {
+      addGamesAvg(data, 1)
+      expect(data).to.deep.equal([
+        {
+          abbr: 'DAL',
+          games: [{}, {}],
+          seasonScores: {
+            pointOT: 0,
+            pointQ1: 60,
+            pointQ2: 128,
+            pointQ3: 46,
+            pointQ4: 120,
+            pointTotal: 354,
+            timeoutsRemaining: 20,
           },
           seasonScoresAvg: {
             pointOT: 0,

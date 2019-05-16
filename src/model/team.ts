@@ -105,11 +105,12 @@ export const addByeWeeks = (data): void => {
  * adds seasonScores and scoresAvg to the team
  * @param data teams with populated games
  */
-export const addGamesAvg = (data: any[]): void => {
+export const addGamesAvg = (data: any[], startWeek: number = 0): void => {
   data.forEach(team => {
     if (team.games && team.games.length > 0) {
-      team.seasonScores = sumObjectsByKey(...team.games.map(game => getScoreByTeam(game, team.abbr)))
-      team.seasonScoresAvg = divideObjectByConstant(team.seasonScores, team.games.length, 1)
+      const games = team.games.slice(startWeek)
+      team.seasonScores = sumObjectsByKey(...games.map(game => getScoreByTeam(game, team.abbr)))
+      team.seasonScoresAvg = divideObjectByConstant(team.seasonScores, games.length, 1)
     }
   })
 }
