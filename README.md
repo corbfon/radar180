@@ -21,6 +21,7 @@ Make sure we can run the project once received.
 
 After running the project locally, you may test the solutions to the problem by querying the http://localhost:4200/teams endpoint
 
+### Endpoints
 
 * Solution 1:
   * [All teams for a season, with bye weeks](http://localhost:4200/teams?season=2016&returnFields=byeWeek,teamId,abbr,fullName,nick)
@@ -28,6 +29,16 @@ After running the project locally, you may test the solutions to the problem by 
 * Solution 2:
   * [Average points for a team](http://localhost:4200/teams?season=2016&team=DAL&returnFields=teamId,abbr,fullName,nick,seasonScoresAvg.pointTotal)
   * [Average points, by period, for a single team](http://localhost:4200/teams?season=2016&team=DAL&returnFields=teamId,abbr,fullName,nick,seasonScoresAvg)
+
+### Explanation
+
+There are three query parameters which can be used with the `/teams` endpoint: `season`, `team`, `returnFields`. `season` is required. `team` can be used to query the teams by their abbreviations, and `returnFields` can be used in order to mask fields to return. `returnFields` is a comma separated list. If `returnFields` is specified, the endpoint adds information based on whether or not the field was requested. e.g. if `returnFields=teamId,abbr`, then `byeWeek` is not calculated and added.
+
+### Two vs One Endpoint
+
+After completing the exercise, it occurs to me that this is probably considered one endpoint, instead of the "TWO endpoints," as stated in the problem statement. The reason I provided a single endpoint is that the success criteria of the second endpoint directly relies on the data that could be provided by the first, namely, it requires `byeWeek` to be added for a single team. Since the base document was still to be a team, and the data was reliant, it made sense to me to provide a single endpoint.
+
+If I were to change the endpoint to better fulfill the "TWO endpoints" success criteria, I would allow the user to "rebase" the root document by adding another route parameter. E.g. `/teams/seasonScoresAvg` would utilize the same logic, but rebase the returned document to the `team.seasonScoresAvg`
 
 ### Additional Examples
 
