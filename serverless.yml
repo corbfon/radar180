@@ -25,15 +25,6 @@ functions:
           path: /teams
           method: get
           cors: true
-  
-  # retrieve the team average scores
-  retrieve-team-scores:
-    handler: src/functions/teams.retrieveSeasonAvg
-    events:
-      - http:
-          path: /teams/season_avg
-          method: get
-          cors: true
 
 plugins:
   - serverless-offline
