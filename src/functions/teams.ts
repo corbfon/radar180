@@ -11,14 +11,13 @@ import { teamsQuery } from './../schemas/team'
 export const retrieve: APIGatewayProxyHandler = handleHttpRequest([
   withQueryValidator(teamsQuery),
   withData(Team.withGames()),
-  addByeWeeks(),
   prepDataResponse(),
 ])
 
 export const retrieveSeasonAvg: APIGatewayProxyHandler = handleHttpRequest([
   withQueryValidator(teamsQuery),
   withData(Team.withGames()),
-  addByeWeeks(),
-  addGamesAvg(),
+  // addByeWeeks(),
+  // addGamesAvg(),
   prepDataResponse(),
 ])

@@ -63,10 +63,5 @@ Do the steps to get the project running locally, and then run `yarn ingest` in o
   - Make endpoint
   - Write tests
   - Add api docs in serverless
-
-## Strats
-- 2
-  - Aggregate over straight game data
-  - Find games where the homeTeamAbbr or visitorTeamAbbr are equal to the the team query parameter
-  - Also match that to the week after the team's bye week
-  - Average that across seasons?
+- Tests
+  - Add tests for game model
