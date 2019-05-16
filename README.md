@@ -54,14 +54,28 @@ Do the steps to get the project running locally, and then run `yarn ingest` in o
   * `yarn db` will run the database by itself
 * You may start over from the beginning by emptying the database with `yarn db:empty`
 
-## To do
-- Ingestion
-  - Add tests?
-- Bye weeks
-  - add api docs
-- Avg scores
-  - Make endpoint
-  - Write tests
-  - Add api docs in serverless
-- Tests
-  - Add tests for game model
+## Testing
+
+Run `yarn start` and then `yarn test` in order to run both unit and integration tests. Unit and integration may be run separately by `yarn test:u` and `yarn test:i`, respectively.
+
+## Problem answer
+
+After running the project locally, the "answers" to both of the problem statements are behind a single endpoint, controlled with query parameters. Try these queries:
+
+[All teams in a season](http://localhost:4200/teams?season=2018)
+[One team in a season](http://localhost:4200/teams?season=2018&team=DAL)
+[One team, including bye week](http://localhost:4200/teams?season=2018&team=DAL&returnFields=byeWeek,teamId,abbr,games,cityState,fullName,nick) - this one excludes some fields
+[All teams in a season with average points after bye week](http://localhost:4200/teams?season=2018&returnFields=byeWeek,teamId,abbr,fullName,nick,seasonScoresAvg&seasonScoresStart=byeWeek)
+[A single team in a season with average points per quarter, plus OT, after bye week](http://localhost:4200/teams?season=2018&returnFields=byeWeek,teamId,abbr,fullName,nick,seasonScoresAvg.pointQ1,seasonScoresAvg.pointQ2,seasonScoresAvg.pointQ3,seasonScoresAvg.pointQ4,seasonScoresAvg.pointOT&seasonScoresStart=byeWeek)
+
+## Ideas for improvements
+
+* Make seasonScores return independent of seasonScoresAvg
+* Allow querying across multiple seasons
+* It is possible that mongodb is connecting on every request (increasing response times) - troubleshoot on development deployment and ensure only one connection is made
+* Report on data integrity (e.g. 2013 season does not have score data, so average scores cannot be provided)
+* Only populate games when necessary (improve conditional querying)
+* Bye weeks
+  * add api docs in serverless
+* Avg scores
+  * Add api docs in serverless
