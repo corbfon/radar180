@@ -175,10 +175,6 @@ describe('Team model', () => {
       await Team.withGames()({ season: 2019 })
       assert.calledWithExactly(buildPipelineStub, { season: 2019 })
     })
-    it('should pass the buildPipeline result to aggregate', async () => {
-      await Team.withGames()({ season: 2019 })
-      assert.calledWithExactly(aggregateStub, pipelineReturn)
-    })
     it('should add bye weeks if no returnFields are specified', async () => {
       await Team.withGames()({ season: 2019 })
       assert.calledOnce(addByeWeeksStub)

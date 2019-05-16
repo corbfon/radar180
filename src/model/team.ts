@@ -113,6 +113,7 @@ export const addByeWeeks = (data): void => {
  * @param data teams with populated games
  */
 export const addGamesAvg = (data: any[], startWeek: SeasonScoresStart = 0): void => {
+  console.log('using start week', startWeek)
   data.forEach(team => {
     if (startWeek === 'byeWeek') {
       startWeek = team.byeWeek
