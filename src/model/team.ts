@@ -69,10 +69,17 @@ export const Team: TeamModel = <TeamModel>createModel('Team', rawSchema, (schema
     return async query => {
       const { returnFields } = query
       const data = await this.aggregate(buildPipeline(query))
-      if (!returnFields || returnFields.includes('byeWeek')) {
+      if (!returnFields || returnFields.includes('byeWeek') || query.seasonScoresStart === 'byeWeek') {
         addByeWeeks(data)
       }
-      if (!returnFields || returnFields.includes('seasonScoresAvg')) {
+      if (
+        !returnFields ||
+        returnFields
+          .reduce((acc, val) => {
+            return (acc += val.split('.'))
+          })
+          .includes('seasonScoresAvg')
+      ) {
         addGamesAvg(data, query.seasonScoresStart)
       }
       return data

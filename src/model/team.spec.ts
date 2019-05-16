@@ -209,6 +209,7 @@ describe('Team model', () => {
     })
     it('should indicate the start week for scores if byeWeek is passed', async () => {
       await Team.withGames()({ season: 2019, returnFields: ['seasonScoresAvg'], seasonScoresStart: 'byeWeek' })
+      assert.calledOnce(addByeWeeksStub)
       assert.calledWithExactly(addGamesAvgStub, aggregateReturn, 'byeWeek')
     })
   })
