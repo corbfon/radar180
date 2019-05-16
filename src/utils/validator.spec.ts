@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import { assert, stub, SinonStub } from 'sinon'
 
 // project imports
-import { withQueryValidator } from './validator'
+import { withQueryValidator, Validator } from './validator'
 import { BadRequestError } from '../schemas/errors'
 
 describe('validator', () => {
@@ -35,6 +35,16 @@ describe('validator', () => {
         return // this is expected
       }
       throw new Error('expected validator to throw an error')
+    })
+  })
+  describe('Validator', () => {
+    it('should allow stringArray casting', () => {
+      const schema = Validator.object().keys({
+        returnFields: Validator.stringArray(),
+      })
+      const { error, value } = schema.validate({ returnFields: 'one,two,three' })
+      if (error) throw error
+      expect(value).to.deep.equal({ returnFields: ['one', 'two', 'three'] })
     })
   })
 })

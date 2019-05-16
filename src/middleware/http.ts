@@ -1,5 +1,6 @@
 // project imports
 import { iHttpRequestMiddleware } from './../utils/handle-http'
+import { filterFields } from '../utils/operators'
 
 export const withData = (query: (query: any) => Promise<any>): iHttpRequestMiddleware => {
   return async context => {
@@ -9,6 +10,10 @@ export const withData = (query: (query: any) => Promise<any>): iHttpRequestMiddl
 
 export const prepDataResponse = (): iHttpRequestMiddleware => {
   return context => {
-    context.res.body.data = context.data
+    if (context.query.returnFields) {
+      context.res.body.data = context.data.map(item => filterFields(item, context.query.returnFields))
+    } else {
+      context.res.body.data = context.data
+    }
   }
 }

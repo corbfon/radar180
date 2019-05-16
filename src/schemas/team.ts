@@ -1,7 +1,8 @@
 // library imports
-import * as joi from 'joi'
+import { Validator } from './../utils/validator'
 
-export const teamsQuery = joi.object().keys({
-  season: joi.number().required(),
-  team: joi.string(),
+export const teamsQuery = Validator.object().keys({
+  season: Validator.number().required(),
+  team: Validator.string(),
+  returnFields: Validator.stringArray(),
 })

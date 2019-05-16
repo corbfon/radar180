@@ -20,7 +20,8 @@ const rawSchema = {
 
 export const Team: TeamModel = <TeamModel>createModel('Team', rawSchema, (schema: Schema) => {
   schema.static('withGames', function() {
-    return ({ season, team }) => {
+    return query => {
+      const { season, team } = query
       let $match = team ? { abbr: team } : {}
       return this.aggregate([
         { $match },
