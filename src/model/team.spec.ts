@@ -158,8 +158,9 @@ describe('Team model', () => {
     let addByeWeeksStub: SinonStub
     let addGamesAvgStub: SinonStub
     const pipelineReturn = { mockQuery: Date.now() }
+    const aggregateReturn = [{ teamId: '12345' }]
     beforeEach(() => {
-      aggregateStub = stub(Team, 'aggregate')
+      aggregateStub = stub(Team, 'aggregate').resolves(aggregateReturn)
       buildPipelineStub = stub(helpers, 'buildPipeline')
       addByeWeeksStub = stub(helpers, 'addByeWeeks')
       addGamesAvgStub = stub(helpers, 'addGamesAvg')
@@ -201,6 +202,14 @@ describe('Team model', () => {
     it('should not add games averages if seasonScoresAvg is not included in returnFields', async () => {
       await Team.withGames()({ season: 2019, returnFields: ['games'] })
       assert.notCalled(addGamesAvgStub)
+    })
+    it('should indicate the start week for scores if a number is passed', async () => {
+      await Team.withGames()({ season: 2019, returnFields: ['seasonScoresAvg'], seasonScoresStart: 15 })
+      assert.calledWithExactly(addGamesAvgStub, aggregateReturn, 15)
+    })
+    it('should indicate the start week for scores if byeWeek is passed', async () => {
+      await Team.withGames()({ season: 2019, returnFields: ['seasonScoresAvg'], seasonScoresStart: 'byeWeek' })
+      assert.calledWithExactly(addGamesAvgStub, aggregateReturn, 'byeWeek')
     })
   })
   describe('buildPipeline', () => {

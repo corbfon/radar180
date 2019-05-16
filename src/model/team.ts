@@ -73,7 +73,7 @@ export const Team: TeamModel = <TeamModel>createModel('Team', rawSchema, (schema
         addByeWeeks(data)
       }
       if (!returnFields || returnFields.includes('seasonScoresAvg')) {
-        addGamesAvg(data)
+        addGamesAvg(data, query.seasonScoresStart)
       }
       return data
     }
@@ -102,11 +102,14 @@ export const addByeWeeks = (data): void => {
 }
 
 /**
- * adds seasonScores and scoresAvg to the team
+ * adds seasonScores and scoresAvg to the team, assumes 0 <= x <= 15 for startWeek range
  * @param data teams with populated games
  */
-export const addGamesAvg = (data: any[], startWeek: number = 0): void => {
+export const addGamesAvg = (data: any[], startWeek: SeasonScoresStart = 0): void => {
   data.forEach(team => {
+    if (startWeek === 'byeWeek') {
+      startWeek = team.byeWeek
+    }
     if (team.games && team.games.length > 0) {
       const games = team.games.slice(startWeek)
       team.seasonScores = sumObjectsByKey(...games.map(game => getScoreByTeam(game, team.abbr)))
@@ -129,5 +132,12 @@ export interface iTeam {
 interface TeamDocument extends Document, iTeam {}
 
 interface TeamModel extends Model<TeamDocument> {
-  withGames: () => (query: { season: number; team?: string; returnFields?: string[] }) => Promise<any>
+  withGames: () => (query: {
+    season: number
+    team?: string
+    returnFields?: string[]
+    seasonScoresStart?: SeasonScoresStart
+  }) => Promise<any>
 }
+
+type SeasonScoresStart = number | 'byeWeek'
