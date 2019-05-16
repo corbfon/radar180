@@ -129,6 +129,5 @@ export interface iTeam {
 interface TeamDocument extends Document, iTeam {}
 
 interface TeamModel extends Model<TeamDocument> {
-  withGames: () => (query: { season: number; team?: string }) => Promise<any>
-  withScores: () => (query: { season: number; team: string }) => Promise<any>
+  withGames: () => (query: { season: number; team?: string; returnFields?: string[] }) => Promise<any>
 }

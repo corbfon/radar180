@@ -155,14 +155,20 @@ describe('Team model', () => {
   describe('withGames', () => {
     let aggregateStub: SinonStub
     let buildPipelineStub: SinonStub
+    let addByeWeeksStub: SinonStub
+    let addGamesAvgStub: SinonStub
     const pipelineReturn = { mockQuery: Date.now() }
     beforeEach(() => {
       aggregateStub = stub(Team, 'aggregate')
       buildPipelineStub = stub(helpers, 'buildPipeline')
+      addByeWeeksStub = stub(helpers, 'addByeWeeks')
+      addGamesAvgStub = stub(helpers, 'addGamesAvg')
     })
     afterEach(() => {
       aggregateStub.restore()
       buildPipelineStub.restore()
+      addByeWeeksStub.restore()
+      addGamesAvgStub.restore()
     })
     it('should call buildPipeline with the query', async () => {
       await Team.withGames()({ season: 2019 })
@@ -171,6 +177,30 @@ describe('Team model', () => {
     it('should pass the buildPipeline result to aggregate', async () => {
       await Team.withGames()({ season: 2019 })
       assert.calledWithExactly(aggregateStub, pipelineReturn)
+    })
+    it('should add bye weeks if no returnFields are specified', async () => {
+      await Team.withGames()({ season: 2019 })
+      assert.calledOnce(addByeWeeksStub)
+    })
+    it('should add bye weeks if specified by returnFields', async () => {
+      await Team.withGames()({ season: 2019, returnFields: ['byeWeek'] })
+      assert.calledOnce(addByeWeeksStub)
+    })
+    it('should not add bye weeks if byeWeeks is not included in returnFields', async () => {
+      await Team.withGames()({ season: 2019, returnFields: ['games'] })
+      assert.notCalled(addByeWeeksStub)
+    })
+    it('should add games averages if no returnFields are specified', async () => {
+      await Team.withGames()({ season: 2019 })
+      assert.calledOnce(addGamesAvgStub)
+    })
+    it('should add games averages if specified in returnFields', async () => {
+      await Team.withGames()({ season: 2019, returnFields: ['seasonScoresAvg'] })
+      assert.calledOnce(addGamesAvgStub)
+    })
+    it('should not add games averages if seasonScoresAvg is not included in returnFields', async () => {
+      await Team.withGames()({ season: 2019, returnFields: ['games'] })
+      assert.notCalled(addGamesAvgStub)
     })
   })
   describe('buildPipeline', () => {
