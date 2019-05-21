@@ -108,21 +108,44 @@ describe('teams integration', () => {
       expect(res.data).to.haveOwnProperty('data')
       expect(res.data.data[0]).to.deep.equal({ abbr: 'DAL', byeWeek: 7 })
     })
-    it('should return correct season points averages for the Cleveland Browns in 2015', async () => {
+    it('should return correct season points averages for the San Francisco 49ers in 2018', async () => {
       const fieldArr = ['abbr', 'seasonScoresAvg']
-      const res = await req({ season: 2015, team: 'CLE', returnFields: fieldArr.join(',') })
+      const res = await req({ season: 2018, team: 'SF', returnFields: fieldArr.join(',') })
       expect(res.status).to.be.equal(200)
       expect(res.data).to.haveOwnProperty('data')
       expect(res.data.data[0]).to.deep.equal({
-        abbr: 'CLE',
+        abbr: 'SF',
         seasonScoresAvg: {
-          pointTotal: 17.4,
-          pointQ1: 3.1,
-          pointQ2: 5.6,
-          pointQ3: 3,
-          pointQ4: 5.4,
+          pointTotal: 21.4,
+          pointQ1: 3.9,
+          pointQ2: 7.4,
+          pointQ3: 6.2,
+          pointQ4: 3.8,
           pointOT: 0.2,
-          timeoutsRemaining: 1.3,
+          timeoutsRemaining: 0.8,
+        },
+      })
+    })
+    it('should return correct season points averages after the bye week for the San Francisco 49ers in 2018', async () => {
+      const fieldArr = ['abbr', 'seasonScoresAvg']
+      const res = await req({
+        season: 2018,
+        team: 'SF',
+        seasonScoresStart: 'byeWeek',
+        returnFields: fieldArr.join(','),
+      })
+      expect(res.status).to.be.equal(200)
+      expect(res.data).to.haveOwnProperty('data')
+      expect(res.data.data[0]).to.deep.equal({
+        abbr: 'SF',
+        seasonScoresAvg: {
+          pointTotal: 18.7,
+          pointQ1: 2.2,
+          pointQ2: 8.7,
+          pointQ3: 3.3,
+          pointQ4: 4,
+          pointOT: 0.5,
+          timeoutsRemaining: 0.5,
         },
       })
     })

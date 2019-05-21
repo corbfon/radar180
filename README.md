@@ -38,7 +38,7 @@ There are three query parameters which can be used with the `/teams` endpoint: `
 
 After completing the exercise, it occurs to me that this is probably considered one endpoint, instead of the "TWO endpoints," as stated in the problem statement. The reason I provided a single endpoint is that the success criteria of the second endpoint directly relies on the data that could be provided by the first, namely, it requires `byeWeek` to be added for a single team. Since the base document was still to be a team, and the data was reliant, it made sense to me to provide a single endpoint.
 
-If I were to change the endpoint to better fulfill the "TWO endpoints" success criteria, I would allow the user to "rebase" the root document by adding another route parameter. E.g. `/teams/seasonScoresAvg` would utilize the same logic, but rebase the returned document to the `team.seasonScoresAvg`
+If I were to change the endpoint to better fulfill the "TWO endpoints" success criteria, I would allow the user to "rebase" the root document by adding another route parameter. E.g. `/teams/{:id}/seasonScoresAvg` would utilize the same logic, but rebase the returned document to the `team.seasonScoresAvg`
 
 ### Additional Examples
 
@@ -93,11 +93,10 @@ Run `yarn start` and then `yarn test` in order to run both unit and integration 
 ## Ideas for improvements
 
 * Make seasonScores return independent of seasonScoresAvg
+* Add scheduled ping to keep services alive (reduce first response time)
 * Allow querying across multiple seasons
-* It is possible that mongodb is connecting on every request (increasing response times) - troubleshoot on development deployment and ensure only one connection is made
+* Refactor `src/model/db.ts` to cache db connection
 * Report on data integrity (e.g. 2013 season does not have score data, so average scores cannot be provided)
 * Only populate games when necessary (improve conditional querying)
-* Bye weeks
-  * add api docs in serverless
-* Avg scores
-  * Add api docs in serverless
+* Add swagger docs
+* Make sure games cannot duplicate on ingestion

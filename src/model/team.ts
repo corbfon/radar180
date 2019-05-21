@@ -69,6 +69,9 @@ export const Team: TeamModel = <TeamModel>createModel('Team', rawSchema, (schema
     return async query => {
       const { returnFields } = query
       const data = await this.aggregate(buildPipeline(query))
+      data.forEach(({ games }) => {
+        games.sort(({ week: a }, { week: b }) => (a >= b ? 1 : -1))
+      })
       if (!returnFields || returnFields.includes('byeWeek') || query.seasonScoresStart === 'byeWeek') {
         addByeWeeks(data)
       }
@@ -97,7 +100,7 @@ export const addByeWeeks = (data): void => {
   for (let i = 0; i < data.length; i++) {
     const team = data[i]
     if (team.games && team.games.length > 0) {
-      const weeksPlayed: number[] = team.games.map(game => game.week).sort((a, b) => (a >= b ? 1 : -1))
+      const weeksPlayed: number[] = team.games.map(game => game.week)
       for (let j = 0; j < allWeeks.length; j++) {
         if (allWeeks[j] !== weeksPlayed[j]) {
           team.byeWeek = allWeeks[j]
@@ -109,17 +112,18 @@ export const addByeWeeks = (data): void => {
 }
 
 /**
- * adds seasonScores and scoresAvg to the team, assumes 0 <= x <= 15 for startWeek range
+ * adds seasonScores and scoresAvg to the team, assumes 1 <= x <= 17 for startWeek range
  * @param data teams with populated games
+ * @todo don't take the ot games into account where ot wasn't played
  */
 export const addGamesAvg = (data: any[], startWeek: SeasonScoresStart = 0): void => {
-  console.log('using start week', startWeek)
   data.forEach(team => {
     if (startWeek === 'byeWeek') {
       startWeek = team.byeWeek
     }
+
     if (team.games && team.games.length > 0) {
-      const games = team.games.slice(startWeek)
+      const games = startWeek ? team.games.slice(<number>startWeek - 1) : team.games
       team.seasonScores = sumObjectsByKey(...games.map(game => getScoreByTeam(game, team.abbr)))
       team.seasonScoresAvg = divideObjectByConstant(team.seasonScores, games.length, 1)
     }
