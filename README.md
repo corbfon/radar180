@@ -1,4 +1,4 @@
-# SportRadar Code Challenge
+# Sports Data Code Challenge
 
 ## Problem
 
